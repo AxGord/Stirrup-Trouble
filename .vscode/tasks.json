@@ -1,0 +1,165 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "isBackgroun": true,
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "launch emulator",
+            "command": "emulator '@'`emulator -list-avds`",
+            "group": "build",
+            "presentation": {
+                "echo": false,
+                "focus": false,
+                "reveal": "silent",
+                "panel": "dedicated"
+            }
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "default",
+            "command": "pony build js debug",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "win debug",
+            "command": "pony build win debug",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "mac debug",
+            "command": "pony build mac debug",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "android debug",
+            "command": "pony build android debug",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "js release",
+            "command": "pony build js release",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "win release",
+            "command": "pony build win release",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "mac release",
+            "command": "pony build mac release",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "android release",
+            "command": "pony build android release",
+            "group": "build",
+            "problemMatcher": [
+                "$haxe-absolute",
+                "$haxe",
+                "$haxe-error",
+                "$haxe-trace"
+            ]
+        },
+        {
+            "runOptions": {
+                "runOn": "default"
+            },
+            "type": "shell",
+            "label": "prepare",
+            "command": "pony prepare",
+            "group": "build"
+        },
+        {
+            "runOptions": {
+                "runOn": "folderOpen"
+            },
+            "type": "shell",
+            "label": "server",
+            "isBackground": true,
+            "command": "pony server",
+            "presentation": {
+                "echo": false,
+                "focus": false,
+                "reveal": "silent",
+                "panel": "dedicated"
+            }
+        }
+    ]
+}

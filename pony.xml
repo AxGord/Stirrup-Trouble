@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="Stirrup Trouble">
+	<server>
+		<path>bin/</path>
+		<port>2000</port>
+		<haxe>6010</haxe>
+	</server>
+	<config dep="js.hxml">
+		<width>1280</width>
+		<height>720</height>
+		<minHeight>540</minHeight>
+		<maxHeight>1280</maxHeight>
+		<!-- Around the column wherever the window is bigger than the view may be; the sky itself is
+		     drawn, see <sky> below. -->
+		<background>#14232C</background>
+		<!-- How long a screen's blocks take to slide in, in milliseconds -->
+		<screen>
+			<dropTime>500</dropTime>
+		</screen>
+		<game>
+			<!-- Only ever seen where the backdrop does not reach; matched to its bottom haze. -->
+			<sky>#885D83</sky>
+			<!-- One art pixel is this many screen pixels, for everything in the world. The horse
+			     sheet is native, the tiles are coarsened to 1/pixel; see <resize> below. -->
+			<pixel>3</pixel>
+			<!-- Where the ground line sits, as a y in the 16:9 reference box; its share of the
+			     height is what is kept as the box grows. <tile> is a ground tile (24px at <pixel>). -->
+			<groundY>590</groundY>
+			<tile>72</tile>
+			<gravity>2600</gravity>
+			<!-- World scroll speed in px/s and how much it gains per second. -->
+			<speed>420</speed>
+			<speedGrow>7</speedGrow>
+			<horse>
+				<x>180</x>
+				<fps>14</fps>
+				<jumpImpulse>1150</jumpImpulse>
+				<!-- Vertical speed left after the jump key is released, 0..1. -->
+				<jumpCut>0.35</jumpCut>
+				<!-- How far the nose lifts at full climbing speed, in radians (~20 degrees). -->
+				<tilt>0.35</tilt>
+				<!-- Tripping over a fence: the hop it is thrown into and the spin, rad/s. 540ms of
+				     air lands it just past half a turn, so it settles on its back. -->
+				<tripImpulse>700</tripImpulse>
+				<tripSpin>6</tripSpin>
+				<!-- Share of the running speed the tumble carries forward, so the flip covers ground
+				     instead of spinning on the spot: about two fences at the starting speed. -->
+				<tripCarry>0.75</tripCarry>
+				<!-- Collision box in world px; matches the drawn silhouette. -->
+				<width>168</width>
+				<height>93</height>
+				<!-- Where that silhouette sits inside its 82x66 animation frame, in source px. -->
+				<artLeft>22</artLeft>
+				<artBottom>57</artBottom>
+			</horse>
+			<coin>
+				<!-- Two source pixels wide: a coin is 32px art, and a fractional scale would draw
+				     its pixels in uneven blocks next to everything else on the grid. -->
+				<size>64</size>
+				<fps>12</fps>
+				<!-- Coins per pattern and the gap between them. -->
+				<row>3</row>
+				<step>90</step>
+				<!-- Keyed by kind: how high above the ground each floats and what it scores. The
+				     heights are the difficulty curve, being what the jump has to reach. -->
+				<copperY>20</copperY>
+				<silverY>130</silverY>
+				<goldY>230</goldY>
+				<copperScore>1</copperScore>
+				<silverScore>2</silverScore>
+				<goldScore>3</goldScore>
+				<!-- How long a collected coin takes to reach the horse, whitening out on the way. -->
+				<pickTime>0.25</pickTime>
+				<bobPeriod>600</bobPeriod>
+				<bobDrop>10</bobDrop>
+			</coin>
+			<parallax>
+				<scale>5</scale>
+				<bg><drift>0.03</drift><sink>0</sink><scale>6</scale></bg>
+				<far><drift>0.07</drift><sink>0</sink></far>
+				<mountains><drift>0.14</drift><sink>0</sink></mountains>
+				<trees><drift>0.28</drift><sink>150</sink></trees>
+				<near><drift>0.5</drift><sink>210</sink></near>
+			</parallax>
+			<bird>
+				<!-- Their own blow-up, like <parallax> and <town>. A 32px cell at 2 draws a 44x54
+				     bird against a 168x93 horse, far enough away to read as sky. -->
+				<scale>2</scale>
+				<fps>10</fps>
+				<!-- Where the drawn bird sits inside its 32x32 cell, in source px: the topmost and
+				     bottommost row the wingbeat reaches. Same idea as <horse><artLeft>, since the
+				     cell is padding and only the art may be measured. -->
+				<artTop>2</artTop>
+				<artBottom>29</artBottom>
+				<!-- Kept between that ceiling and the lowest a bird may be put. What is left over is
+				     the band, which grows with the window: 17px at <minHeight>, 624 at <maxHeight>. -->
+				<clearance>24</clearance>
+				<!-- Travelled distance between flights: 20 to 42 seconds into a run at first, sooner
+				     as the track speeds up. -->
+				<minGap>10000</minGap>
+				<maxGap>24000</maxGap>
+				<!-- A flight is two birds this often out of that; the second follows this far behind
+				     and above, so the pair reads as a formation. -->
+				<pairChance>2</pairChance>
+				<pairLimit>5</pairLimit>
+				<pairStep>150</pairStep>
+				<pairRise>44</pairRise>
+				<!-- How far a bird slides per px of travelled track, the same currency <parallax>
+				     spends. Only two cases exist because a bird has to fly the way it points, and
+				     the honest third one, a bird the horse overtakes, would read as flying
+				     backwards. It is not drawn at all.
+
+				     `pass` is negative because the bird outruns the track and slides forward, out
+				     past the right edge: seven to sixteen seconds at the starting speed. `meet` is
+				     head-on, so its speed adds to the track's and three seconds is the most one can
+				     last, which is why it is the rarer of the two. -->
+				<pass><min>-0.45</min><max>-0.2</max></pass>
+				<meet><min>1.05</min><max>1.45</max><chance>1</chance><limit>4</limit></meet>
+				<!-- A bird rises and falls this far over this much travel, offset into the swing by
+				     where it started, so the two of a pair never beat together. -->
+				<bobPeriod>1100</bobPeriod>
+				<bobRange>16</bobRange>
+			</bird>
+			<!-- The title screen's backdrop, cut from the GothicVania town pack (public domain,
+			     Luis Zuno @ansimuz). Drawn for a 430x272 screen at 1:1, so it is blown up like the
+			     horse; `scale` is its own knob because the packs are free to disagree. -->
+			<town>
+				<scale>3</scale>
+				<!-- How far below the ground line the pack keeps its layers' bottom row: the
+				     preview composes them 288 tall with the ground surface on 249. -->
+				<sink>39</sink>
+				<!-- Sampled off the art, so the flat areas continue it: the top row of sky.png
+				     fills above that layer, the bottom row of ground.png fills below it. -->
+				<sky>#854A62</sky>
+				<dirt>#170F20</dirt>
+				<!-- How fast the sky drifts, px/s. The only thing on the title screen that moves. -->
+				<speed>10</speed>
+				<!-- How far the whole backdrop is dimmed, so the menu reads over it. -->
+				<dim>0.45</dim>
+			</town>
+			<spawn>
+				<!-- Distance between spawned patterns, randomized inside the range. -->
+				<minGap>420</minGap>
+				<maxGap>760</maxGap>
+				<!-- A pattern is a fence fenceChance times out of fenceLimit. -->
+				<fenceChance>2</fenceChance>
+				<fenceLimit>5</fenceLimit>
+			</spawn>
+			<board>
+				<!-- Games kept locally, and how many rows a screen shows of them. -->
+				<records>30</records>
+				<rows>5</rows>
+			</board>
+			<!-- The pause after a crash: one on/off cycle of the horse, and how far it dims. -->
+			<over>
+				<blinkPeriod>0.5</blinkPeriod>
+				<blinkAlpha>0.2</blinkAlpha>
+			</over>
+			<audio>
+				<!-- Seconds a music track takes to come up, and the same to go down under the one
+				     replacing it. Both halves run at once, so a change of screen costs this much
+				     and not twice it. -->
+				<fade>0.6</fade>
+				<!-- Cutting the jump short cuts its sound short with it, and this is how fast.
+				     Not zero: stopping a channel mid-waveform is a click. -->
+				<cut>0.08</cut>
+				<!-- Where the two sliders start on a machine that has never played. Linear gain,
+				     so 0.8 is a volume of 0.8 and not a curve dressed up as a percentage. -->
+				<music>0.8</music>
+				<sound>0.8</sound>
+				<!-- Headroom, and the reason it is not 1. The music alone reaches 0.74 on the output
+				     with its slider at 1, and the measured sum was 1.05 with the menu being clicked
+				     through, which is past full scale. Chromium passes that on distorted; Safari
+				     limits the whole AudioContext, which is heard as the music dying. Every level
+				     in <ffmpeg> is mixed inside this room. -->
+				<master>0.6</master>
+				<!-- How many effects may be audible at once. Every sample is a whole second long, so
+				     a voice is held that long whatever the sound does inside it. At double the
+				     starting speed a coin row spans 215 ms against a 500 ms tightest gap, so two
+				     rows ring together with a jump and its landing under them: eight. The menu can
+				     ask for more, and this is what says no. Heaps virtualizes the rest. -->
+				<voices>8</voices>
+				<!-- How far below its own level a coin may land, drawn afresh for each one: three
+				     identical samples in a row read as a stutter rather than as three coins. -->
+				<coinSpread>0.25</coinSpread>
+			</audio>
+		</game>
+		<apps>
+			<win>
+				<baseUrl>assets/</baseUrl>
+			</win>
+			<android>
+				<baseUrl></baseUrl>
+			</android>
+			<mac>
+				<baseUrl>assets/</baseUrl>
+			</mac>
+			<js>
+				<baseUrl>assets/</baseUrl>
+			</js>
+		</apps>
+	</config>
+	<download path="libs/">
+		<unit url="https://raw.githubusercontent.com/jfriend00/docReady/master/docready.js"/>
+		<unit url="https://github.com/HaxeFoundation/hashlink/releases/download/{v}/hl-{v}.0-win.zip" v="1.16"/>
+	</download>
+	<haxelib>
+		<lib>pony dev</lib>
+		<lib>heaps 2.1.0</lib>
+		<lib>domkit 0.3.0</lib>
+		<lib commit="1.16" y="true" git="git@github.com:HaxeFoundation/hashlink.git" mute="true">hashlink git</lib>
+		<lib path="libs/directx/" parent="hashlink" mute="true">hldx dev</lib>
+		<lib path="libs/sdl/" parent="hashlink" mute="true">hlsdl dev</lib>
+		<lib path="other/haxelib/" parent="hashlink" mute="true">hashlink dev</lib>
+	</haxelib>
+	<clean group="assets">
+		<before>
+			<prepare>
+				<dir>assets_built/</dir>
+				<dir>bin/assets/</dir>
+			</prepare>
+		</before>
+	</clean>
+	<clean>
+		<before>
+			<build>
+				<apps>
+					<android>
+						<dir rimraf="true">bin/android/app/src/main/assets/</dir>
+					</android>
+				</apps>
+			</build>
+		</before>
+	</clean>
+	<spritesheet group="assets" from="assets_source/sheets/" to="assets_built/frames/">
+		<unit wh="82 66" to="horse/run" colorKey="#FFFFFF">horse_run_cycle.png</unit>
+		<!-- The coin sheets are a 32x32 grid whose cells end in an unwanted drop shadow: the coin is
+		     rows 0-20, the shadow 26-30. A 21px cell takes the coin and leaves the shadow. -->
+		<unit wh="32 21" to="coin/copper">coin_copper.png</unit>
+		<unit wh="32 21" to="coin/silver">coin_silver.png</unit>
+		<unit wh="32 21" to="coin/gold">coin_gold.png</unit>
+		<!-- A bird sheet is a 3x8 grid whose first row is the flight cycle from the side; `count`
+		     trims the rest. It faces left, and the other direction is a mirror. -->
+		<unit wh="32 32" count="3" to="bird/black">bird_2_black.png</unit>
+		<unit wh="32 32" count="3" to="bird/eagle">bird_2_eagle.png</unit>
+		<unit wh="32 32" count="3" to="bird/sparrow">bird_3_sparrow.png</unit>
+	</spritesheet>
+	<!-- The Kenney tiles are 70x70 with no pixel size of their own, so next to the horse they read
+	     as a different game. Coarsened to 24 here and blown back up by <pixel> in WorldView, which
+	     is what <tile> 72 is. Done here and not in the packer because TexturePacker's scale applies
+	     to a whole sheet, so a second scale would mean a second atlas. -->
+	<resize group="assets" from="assets_source/world/" to="assets_built/world/" wh="24">
+		<dir>tiles/</dir>
+	</resize>
+	<!-- The music and the effects, written as flac and shipped as mp3. -->
+	<ffmpeg group="assets" from="assets_source/" to="bin/assets/" ext="mp3" q="4">
+		<path from="music/" to="music/">
+			<!-- The title screen sits under a menu that has to be read, so it plays under it. -->
+			<unit af="volume=-2.5dB">main.flac</unit>
+			<unit>race.flac</unit>
+			<!-- Comes in behind a score the player is reading, and after the crash has just been
+			     loud, so it is the quietest of the three. -->
+			<unit af="volume=-3.5dB">lose.flac</unit>
+		</path>
+		<path from="sound/" to="sound/">
+			<unit af="volume=12dB">btn_select.flac</unit>
+			<unit af="volume=6dB">btn_press.flac</unit>
+			<unit af="volume=3dB">btn_start.flac</unit>
+			<unit af="volume=-9dB">coin1.flac</unit>
+			<unit af="volume=-9dB">coin2.flac</unit>
+			<unit af="volume=-9dB">coin3.flac</unit>
+			<unit>jump1.flac</unit>
+			<unit>jump2.flac</unit>
+			<unit>jump3.flac</unit>
+			<unit>jump_end.flac</unit>
+			<unit>game_over.flac</unit>
+		</path>
+	</ffmpeg>
+	<!-- One atlas for the whole game. -->
+	<texturepacker
+		group="assets"
+		format="libgdx png"
+		to="bin/assets/"
+		ext="atlas"
+		rotation="false"
+		trim="None"
+		pot="true"
+		extrude="1"
+	>
+		<unit>
+			<output>game</output>
+			<input>assets_source/art/</input>
+			<input>assets_built/frames/</input>
+			<input>assets_built/world/</input>
+		</unit>
+	</texturepacker>
+	<hl>
+		<release>
+			<main>bin/app.hl</main>
+			<apps>
+				<win>
+					<output clean="true">builds/app</output>
+					<hl>libs/hl-1.16.0-win.zip</hl>
+				</win>
+				<mac>
+					<output clean="true">builds/app.app</output>
+					<hl>mac</hl>
+				</mac>
+			</apps>
+		</release>
+		<apps>
+			<android>
+				<output>bin/android</output>
+				<hl>android</hl>
+				<title>Stirrup Trouble</title>
+				<id>io.github.axgord.horsegame</id>
+				<version>1</version>
+				<versionName>1.0</versionName>
+				<storeFile>bin/testcert.p12</storeFile>
+				<storePassword></storePassword>
+				<keyAlias>test</keyAlias>
+				<keyPassword></keyPassword>
+				<abiFilters>x86</abiFilters>
+			</android>
+		</apps>
+	</hl>
+	<run>
+		<command>node bin/test.js</command>
+	</run>
+	<build>
+		<prepare hxml="test">
+			<main>TestMain</main>
+			<js>bin/test.js</js>
+			<cp>src</cp>
+			<cp>test</cp>
+			<lib>hxnodejs</lib>
+			<d name="app">js</d>
+		</prepare>
+		<build>
+			<hxml>test</hxml>
+		</build>
+		<apps>
+			<js>
+				<prepare hxml="js">
+					<main>Main</main>
+					<js>bin/app.js</js>
+					<cp>src</cp>
+					<dce>full</dce>
+					<d>analyzer-optimize</d>
+				</prepare>
+				<build>
+					<hxml>js</hxml>
+				</build>
+			</js>
+			<win>
+				<prepare hxml="win">
+					<main>Main</main>
+					<hl>bin/app.hl</hl>
+					<cp>src</cp>
+					<lib>hldx:dev</lib>
+					<dce>full</dce>
+					<d>analyzer-optimize</d>
+					<d name="hl_ver">1.16.0</d>
+					<d>desktop</d>
+					<d>win</d>
+				</prepare>
+				<build>
+					<hxml>win</hxml>
+				</build>
+			</win>
+			<mac>
+				<prepare hxml="mac">
+					<main>Main</main>
+					<hl>bin/app.hl</hl>
+					<cp>src</cp>
+					<lib>hlsdl:dev</lib>
+					<dce>full</dce>
+					<d>analyzer-optimize</d>
+					<d name="hl_ver">1.16.0</d>
+					<d>desktop</d>
+					<d>mac</d>
+				</prepare>
+				<build>
+					<hxml>mac</hxml>
+				</build>
+			</mac>
+			<android>
+				<prepare hxml="android">
+					<main>Main</main>
+					<hl>bin/android/app/src/haxe/main.c</hl>
+					<cp>src</cp>
+					<lib>hlsdl:dev</lib>
+					<dce>full</dce>
+					<d>analyzer-optimize</d>
+					<d name="hl_ver">1.16.0</d>
+					<d>mobile</d>
+					<d>android</d>
+					<m>addMetadata("@:build(pony.macro.SdlFix.build())", "sdl.GL")</m>
+					<m>addMetadata("@:build(pony.macro.SdlFix.build())", "sdl.Sdl")</m>
+					<m>addMetadata("@:build(pony.macro.SdlFix.build())", "sdl.Window")</m>
+				</prepare>
+				<build>
+					<hxml>android</hxml>
+				</build>
+			</android>
+		</apps>
+	</build>
+	<uglify>
+		<apps>
+			<js libcache="true">
+				<release>
+					<c/>
+					<m/>
+				</release>
+				<debug>
+					<sourcemap>
+						<input>bin/app.js.map</input>
+						<output>bin/app.js.map</output>
+						<url>app.js.map</url>
+						<source>app.js</source>
+						<offset>0</offset>
+					</sourcemap>
+				</debug>
+				<input>libs/docready.js</input>
+				<input>bin/app.js</input>
+				<output>bin/app.js</output>
+			</js>
+		</apps>
+	</uglify>
+	<zip>
+		<compress>9</compress>
+		<apps>
+			<js>
+				<prefix>bin/</prefix>
+				<input>assets/</input>
+				<input>app.js</input>
+				<input>index.html</input>
+				<output>builds/horse_game.zip</output>
+			</js>
+		</apps>
+	</zip>
+</project>

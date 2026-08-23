@@ -1,0 +1,58 @@
+<!-- The reference box: 1280 wide, `<minHeight>` tall, never the window. MenuView hangs it off
+     `AppService.screenY`. -->
+<layout style="style.xml" w="stageWidth" h="stageHeight">
+	<!-- 14 and not 18: the column has five rows and has to stay inside `<minHeight>`. -->
+	<layout iv="14">
+		<!-- The tagline belongs to the title, so it sits in its line box, not a row of the column. -->
+		<layout id="title" iv="0">
+			<Title>STIRRUP TROUBLE</Title>
+			<Sub>THE WAGON CAN WAIT</Sub>
+		</layout>
+		<layout ih="16">
+			<layout id="field">
+				<!-- Named so MenuView can light it: the field has no art of its own to change. -->
+				<Panel id="panel" w="380" h="46"/>
+				<Input id="input" maxWidth="348"/>
+			</layout>
+			<layout id="dice">
+				<button id="button">
+					<Image name="ui/button"/>
+					<Image name="ui/button_over"/>
+					<Image name="ui/button_down"/>
+				</button>
+				<Small>NEW NAME</Small>
+			</layout>
+		</layout>
+		<layout id="play">
+			<button id="button">
+				<Image name="ui/button"/>
+				<Image name="ui/button_over"/>
+				<Image name="ui/button_down"/>
+			</button>
+			<Label>PLAY</Label>
+		</layout>
+		<!-- Between PLAY and the board, so what the screen is for stays first. The range is 0..1
+		     because that is what a channel group takes, handed straight over.
+
+		     Ten stops and not twenty: every stop of the sound slider answers with a click, so
+		     `step` is also how fast the menu can be made to talk. Written only here; the arrow
+		     keys read it back off the slider. -->
+		<layout id="settings" iv="8">
+			<layout ih="12">
+				<Small maxWidth="70" align="right">MUSIC</Small>
+				<slider id="music" min="0" max="1" step="0.1">
+					<SliderTrack/>
+					<SliderKnob/>
+				</slider>
+			</layout>
+			<layout ih="12">
+				<Small maxWidth="70" align="right">SOUND</Small>
+				<slider id="sound" min="0" max="1" step="0.1">
+					<SliderTrack/>
+					<SliderKnob/>
+				</slider>
+			</layout>
+		</layout>
+		<include>board.xml</include>
+	</layout>
+</layout>

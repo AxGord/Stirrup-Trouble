@@ -1,0 +1,12 @@
+<!-- The reference box, like ui/menu.xml; OverView places it. -->
+<layout style="style.xml" w="stageWidth" h="stageHeight">
+	<layout iv="16">
+		<node id="head">
+			<Panel w="500" h="126"/>
+			<Title y="14" maxWidth="500" align="center">GAME OVER</Title>
+			<Sub id="score" y="92" maxWidth="500" align="center"/>
+		</node>
+		<include>board.xml</include>
+		<Small id="hint">(any key or click to continue)</Small>
+	</layout>
+</layout>

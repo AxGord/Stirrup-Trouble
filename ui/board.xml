@@ -1,0 +1,32 @@
+<!-- Five leaderboard lines. The panel is the only fixed size; the rows measure themselves from the
+     column widths. Each column is a `maxWidth` box, so a row keeps its geometry whatever it holds. -->
+<layout id="board">
+	<Panel w="500" h="191"/>
+	<layout iv="7">
+		<layout ih="16">
+			<Row id="row0rank" maxWidth="40" align="left"/>
+			<Row id="row0name" maxWidth="300" align="left"/>
+			<Row id="row0coins" maxWidth="80" align="right"/>
+		</layout>
+		<layout ih="16">
+			<Row id="row1rank" maxWidth="40" align="left"/>
+			<Row id="row1name" maxWidth="300" align="left"/>
+			<Row id="row1coins" maxWidth="80" align="right"/>
+		</layout>
+		<layout ih="16">
+			<Row id="row2rank" maxWidth="40" align="left"/>
+			<Row id="row2name" maxWidth="300" align="left"/>
+			<Row id="row2coins" maxWidth="80" align="right"/>
+		</layout>
+		<layout ih="16">
+			<Row id="row3rank" maxWidth="40" align="left"/>
+			<Row id="row3name" maxWidth="300" align="left"/>
+			<Row id="row3coins" maxWidth="80" align="right"/>
+		</layout>
+		<layout ih="16">
+			<Row id="row4rank" maxWidth="40" align="left"/>
+			<Row id="row4name" maxWidth="300" align="left"/>
+			<Row id="row4coins" maxWidth="80" align="right"/>
+		</layout>
+	</layout>
+</layout>

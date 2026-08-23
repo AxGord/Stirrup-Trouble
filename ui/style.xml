@@ -1,0 +1,17 @@
+<style>
+
+	<Title extends="simpleText" size="64" color="#FFF3C4" shadow="#4A2E12 4"/>
+	<Sub extends="simpleText" size="24" color="#FFFFFF" shadow="#4A2E12 2"/>
+	<Label extends="simpleText" size="28" color="#F5E6C8" shadow="#20160A 2"/>
+	<Small extends="simpleText" size="18" color="#F5E6C8" shadow="#20160A 2"/>
+	<Row extends="simpleText" size="20" color="#F5E6C8" shadow="#20160A 2"/>
+	<Count extends="simpleText" size="40" color="#FFFFFF" shadow="#20160A 3"/>
+	<Image extends="image" src="game.atlas"/>
+	<Panel extends="rect" color="#60201810" round="8"/>
+	<Input extends="input" size="26" color="#FFF3C4" maxChars="24" inputCursor="0 2 #FFF3C4"/>
+	<!-- The knob is a one-node button, so it tints itself on hover and press. The track is a warm
+	     mid-dark rather than near-black because MenuView lights it with `tint`, which multiplies. -->
+	<SliderTrack extends="rect" w="240" h="12" color="#30402A1C" round="6"/>
+	<SliderKnob extends="rect" w="22" h="22" color="#F5E6C8" round="6"/>
+
+</style>

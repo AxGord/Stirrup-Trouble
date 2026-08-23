@@ -1,0 +1,13 @@
+<!-- The reference box, like ui/menu.xml. HudView hangs it off the top of the visible box, so the
+     counter stays beside the track rather than out in the border. -->
+<layout style="style.xml" w="stageWidth" h="stageHeight" align="top left" border="24">
+	<layout ih="14">
+		<!-- `rest2` is the frame the coin waits on between turns. `anim24` is one turn owed, eight
+		     frames, a third of a second; each further turn owed adds 24, capped at `max72` because
+		     faster than that reads as flicker.
+
+		     The border makes up for the parked frame sitting high in its cell. -->
+		<Image id="coin" name="coin/gold{anim24,rest2,boost2,max72}" border="4 0 0 0" scale="1.4"/>
+		<Count id="coins">0</Count>
+	</layout>
+</layout>
