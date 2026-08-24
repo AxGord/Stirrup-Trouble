@@ -10,6 +10,11 @@ the score comes up.
 
 Play: `Space` / `Up` / `W` / click. Any key or a click returns to the menu.
 
+Link to the game
+-----
+<https://axgord.itch.io/stirrup-trouble>
+
+
 Build
 -----
 
