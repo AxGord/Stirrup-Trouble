@@ -205,7 +205,7 @@
 		<unit url="https://github.com/HaxeFoundation/hashlink/releases/download/{v}/hl-{v}.0-win.zip" v="1.16"/>
 	</download>
 	<haxelib>
-		<lib>pony dev</lib>
+		<lib>pony 1.10.1</lib>
 		<lib>heaps 2.1.0</lib>
 		<lib>domkit 0.3.0</lib>
 		<lib commit="1.16" y="true" git="git@github.com:HaxeFoundation/hashlink.git" mute="true">hashlink git</lib>
