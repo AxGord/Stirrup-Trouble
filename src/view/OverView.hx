@@ -1,6 +1,5 @@
 package view;
 
-import h2d.Interactive;
 import model.ProfileModel.BoardRow;
 
 /**
@@ -16,7 +15,6 @@ final class OverView extends HeapsXmlUi implements DI implements HasSignal imple
 	@:use private var appService: AppService;
 
 	private final table: BoardTable;
-	private final touch: Interactive;
 
 	/** The heading comes down from above the window and the board and its line come up from below. */
 	private final drop: DropIn;
@@ -37,18 +35,11 @@ final class OverView extends HeapsXmlUi implements DI implements HasSignal imple
 		drop = new DropIn(appService, this, [head], [board, hint]);
 		drop.onLand << landHandler;
 		visible = false;
-		// Sits on top of the run's own click sheet, so a click here never reaches the horse.
-		touch = new Interactive(Config.width, 0, this);
-		touch.onPush = _ -> dismiss();
-		resizeHandler(appService.view);
+		resizeHandler();
 	}
 
-	/** The screen centres in the box the game is drawn in, and its click sheet covers all of it. */
-	@:listen(appService.onResize) private function resizeHandler(view: Rect<Float>): Void {
-		y = appService.screenY;
-		touch.y = view.y - y;
-		touch.height = view.height;
-	}
+	/** The screen centres in the box the game is drawn in. */
+	@:listen(appService.onResize) private function resizeHandler(): Void y = appService.screenY;
 
 	public function show(coins: Int, record: Bool, rows: Array<BoardRow>): Void {
 		head_score.text = record ? 'NEW RECORD  $coins' : 'COINS  $coins';
@@ -65,9 +56,11 @@ final class OverView extends HeapsXmlUi implements DI implements HasSignal imple
 
 	@:listen(Keyboard.down, waiting) private function keyHandler(key: Key): Void dismiss();
 
+	@:listen(appService.onPress, waiting) private function pressHandler(): Void dismiss();
+
 	/**
-	 * Dropping `waiting` unsubscribes `keyHandler` inside its own dispatch, so a mashed key cannot
-	 * continue twice. The click sheet outlives the screen, hence the guard.
+	 * Dropping `waiting` unsubscribes both handlers inside their own dispatch, so a mashed key
+	 * cannot continue twice; the guard is for a key and a click landing in the same frame.
 	 */
 	private function dismiss(): Void {
 		if (!waiting) return;

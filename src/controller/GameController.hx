@@ -15,6 +15,9 @@ import view.WorldView;
 	@:auto public var onOver: Signal1<Int>;
 	@:auto public var onContinue: Signal0;
 
+	/** The window is where a jump comes from, wherever in it the player taps. */
+	@:use private var appService: AppService;
+
 	/** Only to say what the finished run came to; the record itself is filed above. */
 	@:use private var profile: ProfileModel;
 
@@ -37,13 +40,13 @@ import view.WorldView;
 		track.start();
 	}
 
-	@:listen(world.onPress)
+	@:listen(appService.onPress)
 	@:listen(Keyboard.down - Key.Space)
 	@:listen(Keyboard.down - Key.Up)
 	@:listen(Keyboard.down - Key.W)
 	private function pressHandler(): Void horse.press();
 
-	@:listen(world.onRelease)
+	@:listen(appService.onRelease)
 	@:listen(Keyboard.up - Key.Space)
 	@:listen(Keyboard.up - Key.Up)
 	@:listen(Keyboard.up - Key.W)

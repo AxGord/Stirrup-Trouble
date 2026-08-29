@@ -1,6 +1,5 @@
 package view;
 
-import h2d.Interactive;
 import model.Entity;
 
 /**
@@ -19,12 +18,12 @@ typedef SkyLayer = {
 /**
  * The picture a run is drawn as, and the one thing deciding what is in front of what: backdrop,
  * ground, the track's layer, the horse. It knows how far the world has scrolled and how high the
- * horse is, but not what that means; the controller feeds it and takes its input signals back.
+ * horse is, but not what that means; the controller feeds it.
  *
  * Everything with behaviour draws itself. What is left here is the box: the ground line every layer
- * hangs from, the wrapping ground strip, the parallax backdrop and the click sheet.
+ * hangs from, the wrapping ground strip and the parallax backdrop.
  */
-@:nullSafety(Strict) final class WorldView extends Object implements DI implements HasSignal implements HasListener {
+@:nullSafety(Strict) final class WorldView extends Object implements DI implements HasListener {
 
 	private static final SKY: Array<SkyLayer> = [
 		{
@@ -65,9 +64,6 @@ typedef SkyLayer = {
 		}
 	];
 
-	@:auto public var onPress: Signal0;
-	@:auto public var onRelease: Signal0;
-
 	@:use private var appService: AppService;
 
 	/**
@@ -92,9 +88,6 @@ typedef SkyLayer = {
 
 	private final ground: ParallaxLayer;
 
-	/** Click to jump, over the whole visible box. */
-	private final touch: Interactive = new Interactive(Config.width, 0);
-
 	public function new() {
 		super(appService.scene);
 		track = new TrackView(horse);
@@ -113,9 +106,6 @@ typedef SkyLayer = {
 		// The coins go under the horse, so a collected one disappears behind it.
 		content.addChild(track);
 		content.addChild(horse);
-		addChild(touch);
-		touch.onPush = pushHandler;
-		touch.onRelease = releaseHandler;
 		// Places everything the ground line decides, the horse included.
 		resizeHandler(appService.view);
 		moveTo(0);
@@ -126,8 +116,7 @@ typedef SkyLayer = {
 	 * ground line, and the ground strip is rebuilt because its dirt reaches the bottom edge.
 	 */
 	@:listen(appService.onResize) private function resizeHandler(view: Rect<Float>): Void {
-		content.y = touch.y = view.y;
-		touch.height = view.height;
+		content.y = view.y;
 		final groundY: Float = appService.groundY;
 		for (index => layer in parallax) layer.setY(layerTop(SKY[index], groundY));
 		flock.setSky(groundY);
@@ -198,9 +187,5 @@ typedef SkyLayer = {
 	private static function layerTop(layer: SkyLayer, groundY: Float): Float {
 		return layer.hang ? 0 : groundY + layer.sink - Assets.getTexture(layer.asset).height * layer.scale;
 	}
-
-	private function pushHandler(event: hxd.Event): Void ePress.dispatch();
-
-	private function releaseHandler(event: hxd.Event): Void eRelease.dispatch();
 
 }
