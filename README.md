@@ -46,9 +46,8 @@ back to, and the GUI's licence asks that changes be indicated. The rest are CC0 
   [Platformer Art Complete Pack](https://opengameart.org/content/platformer-art-complete-pack-often-updated)
   by Kenney Vleugels ([kenney.nl](https://kenney.nl/)), CC0. `castleMid` and `castleCenter` are the
   ground; the pack is lit for daylight, so it reads brighter than the dusk backdrop on purpose.
-* Backdrop: Parallax Mountain Pack by Luis Zuno ([@ansimuz](https://ansimuz.com/)), CC0. No link:
-  the drop is `parallax_mountain_pack.zip` from 2015 and its own `license.txt` is what names the
-  author and the licence.
+* Backdrop: [Parallax Mountain Pack](https://opengameart.org/content/mountain-at-dusk-background)
+  by Luis Zuno ([@ansimuz](https://ansimuz.com/)), CC0.
 * Title screen: [GothicVania Town](https://ansimuz.itch.io/gothicvania-town) by the same author,
   public domain. `TownView` composes a still frame from its tiling layers and drifts only the sky.
 * GUI: [RPG GUI construction kit v1.0](https://opengameart.org/content/rpg-gui-construction-kit-v10)
