@@ -339,7 +339,7 @@
 		<zip>
 			<apps>
 				<js>
-					<command>butler push builds/horse_game.zip axgord/stirrup-trouble:html5 --if-changed</command>
+					<command>butler push builds/horse_game.zip axgord/stirrup-trouble:html5</command>
 				</js>
 			</apps>
 		</zip>
@@ -452,6 +452,7 @@
 				<input>assets/</input>
 				<input>app.js</input>
 				<input>index.html</input>
+				<input>icon.png</input>
 				<output>builds/horse_game.zip</output>
 			</js>
 		</apps>
