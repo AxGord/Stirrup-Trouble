@@ -37,7 +37,7 @@ import model.Entity.EntityKind;
 	@:use private var horse: HorseModel;
 
 	private final entities: Array<Entity> = [];
-	private final fenceSize: Point<Float> = new Point<Float>(Config.game_tile, Config.game_tile);
+	private final fenceSize: Point<Float> = new Point<Float>(Config.game_tile, Config.game_fenceHeight);
 	private final coinSize: Point<Float> = new Point<Float>(Config.game_coin_size, Config.game_coin_size);
 
 	private var nextSpawn: Float = 0;
@@ -87,13 +87,19 @@ import model.Entity.EntityKind;
 				continue;
 			}
 			if (entity.x > distance + width) break;
-			if (!entity.hits(distance, horse.height, width, Config.game_horse_height)) {
+			// A fence is measured against the legs alone, a coin against the whole box: catching a
+			// coin on the nose is a gift, tripping on the air under it is not.
+			if (entity.kind == EntityKind.Fence) {
+				if (entity.hits(distance + Config.game_horse_hitLeft, horse.height, Config.game_horse_hitWidth, Config.game_horse_height)) {
+					crash();
+					return;
+				}
 				i++;
 				continue;
 			}
-			if (entity.kind == EntityKind.Fence) {
-				crash();
-				return;
+			if (!entity.hits(distance, horse.height, width, Config.game_horse_height)) {
+				i++;
+				continue;
 			}
 			coins += entity.value;
 			// Not `drop`: a picked coin is handed over whole and its view lives on past this.

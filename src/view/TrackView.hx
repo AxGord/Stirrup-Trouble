@@ -44,14 +44,14 @@ import pony.TypedFPool;
 	}
 
 	public function spawn(entity: Entity): Void {
-		final top: Float = -(entity.y + entity.size.y);
 		final object: Object = if (entity.kind == EntityKind.Fence) {
-			final fence: Object = fenceView(entity);
-			fence.setPosition(entity.x, top);
+			final fence: Object = fenceView();
+			// Its own box stops at the rail, but the whole tile is drawn, standing on the ground line.
+			fence.setPosition(entity.x, -Config.game_tile);
 			fence;
 		} else {
 			final coin: CoinView = coinView(entity);
-			coin.stand(entity.x, top);
+			coin.stand(entity.x, -(entity.y + entity.size.y));
 			coin.bob(distance);
 			standing.push(coin);
 			coin;
@@ -101,10 +101,10 @@ import pony.TypedFPool;
 		return coin;
 	}
 
-	private function fenceView(entity: Entity): Object {
+	private function fenceView(): Object {
 		final tile: Tile = Assets.getTexture(Assets.FENCE);
 		final bitmap: Bitmap = new Bitmap(tile);
-		bitmap.setScale(entity.size.x / tile.width);
+		bitmap.setScale(Config.game_tile / tile.width);
 		return bitmap;
 	}
 

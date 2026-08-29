@@ -9,7 +9,10 @@ enum abstract EntityKind(Int) {
 
 }
 
-/** One thing standing in the world. `y` is measured up from the ground line, so ground is 0. */
+/**
+ * One thing standing in the world. `y` is measured up from the ground line, so ground is 0, and
+ * `size` is the collision box, which the fence's art outgrows: it draws a whole tile.
+ */
 @:nullSafety(Strict) final class Entity {
 
 	public final kind: EntityKind;

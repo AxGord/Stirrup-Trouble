@@ -26,7 +26,7 @@ import pony.time.DeltaTime;
 	/** How finely `dangerWindow` walks the collision predicate. */
 	private static inline final STAND: Float = 1;
 
-	private static final FENCE: Point<Float> = new Point<Float>(Config.game_tile, Config.game_tile);
+	private static final FENCE: Point<Float> = new Point<Float>(Config.game_tile, Config.game_fenceHeight);
 
 	public static function run(): Void {
 		final full: Array<Float> = profile(false);
@@ -58,7 +58,7 @@ import pony.time.DeltaTime;
 
 		Check.run('a jump let go of at once cannot clear a fence', () -> {
 			final top: Float = highest(profile(true));
-			Check.isTrue(top < Config.game_tile, 'a cut jump reaches $top, over the ${Config.game_tile} fence');
+			Check.isTrue(top < Config.game_fenceHeight, 'a cut jump reaches $top, over the ${Config.game_fenceHeight} fence');
 		});
 
 		Check.run('the top coin row is still reachable', () -> {
@@ -103,7 +103,7 @@ import pony.time.DeltaTime;
 		final fence: Entity = new Entity(EntityKind.Fence, 0, 0, FENCE);
 		var first: Int = -1;
 		var last: Int = -1;
-		for (i => height in heights) if (!fence.hits(0, height, Config.game_horse_width, Config.game_horse_height)) {
+		for (i => height in heights) if (!trips(fence, 0, height)) {
 			if (first == -1) first = i;
 			last = i;
 		}
@@ -122,7 +122,7 @@ import pony.time.DeltaTime;
 		var found: Bool = false;
 		var distance: Float = -Config.width;
 		while (distance < Config.width) {
-			if (fence.hits(distance, 0, Config.game_horse_width, Config.game_horse_height)) {
+			if (trips(fence, distance, 0)) {
 				if (!found) from = distance;
 				found = true;
 				to = distance;
@@ -130,6 +130,12 @@ import pony.time.DeltaTime;
 			distance += STAND;
 		}
 		return to - from + 2 * STAND;
+	}
+
+
+	/** Whether a fence that far ahead of the horse's box would trip it, by the game's own rule. */
+	private static inline function trips(fence: Entity, distance: Float, height: Float): Bool {
+		return fence.hits(distance + Config.game_horse_hitLeft, height, Config.game_horse_hitWidth, Config.game_horse_height);
 	}
 
 }

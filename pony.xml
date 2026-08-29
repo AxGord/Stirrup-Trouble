@@ -27,6 +27,9 @@
 			     height is what is kept as the box grows. <tile> is a ground tile (24px at <pixel>). -->
 			<groundY>590</groundY>
 			<tile>72</tile>
+			<!-- A fence stands one <tile> tall, but the top three source rows of its art are
+			     empty, so its rail starts here. Drawn at the full tile; only measured at this. -->
+			<fenceHeight>63</fenceHeight>
 			<gravity>2600</gravity>
 			<!-- World scroll speed in px/s and how much it gains per second. -->
 			<speed>420</speed>
@@ -49,6 +52,11 @@
 				<!-- Collision box in world px; matches the drawn silhouette. -->
 				<width>168</width>
 				<height>93</height>
+				<!-- What an obstacle is measured against: the legs alone. The box's front and back
+				     corners are air, under the nose and under the tail, and a fence reached them
+				     before the hooves did. Offset from the box's left edge, both in world px. -->
+				<hitLeft>36</hitLeft>
+				<hitWidth>96</hitWidth>
 				<!-- Where that silhouette sits inside its 82x66 animation frame, in source px. -->
 				<artLeft>22</artLeft>
 				<artBottom>57</artBottom>
@@ -326,6 +334,15 @@
 	</hl>
 	<run>
 		<command>node bin/test.js</command>
+	</run>
+	<run group="deploy">
+		<zip>
+			<apps>
+				<js>
+					<command>butler push builds/horse_game.zip axgord/stirrup-trouble:html5 --if-changed</command>
+				</js>
+			</apps>
+		</zip>
 	</run>
 	<build>
 		<prepare hxml="test">
